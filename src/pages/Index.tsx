@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
-import Navbar from '@/components/Navbar';
 import { motion } from 'framer-motion';
 
 const Index = () => {
@@ -40,8 +38,6 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen">
-      <Navbar />
-      
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
         <div

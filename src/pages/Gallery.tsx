@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -6,16 +5,16 @@ import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import PhotoCard from '@/components/PhotoCard';
-import Navbar from '@/components/Navbar';
 import { Grid, List, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Navbar from '@/components/Navbar';
 
 const Gallery = () => {
   const [photos, setPhotos] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode<'grid' | 'list'>>('grid');
   const navigate = useNavigate();
   const { toast } = useToast();
 

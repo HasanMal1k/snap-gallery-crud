@@ -11,6 +11,7 @@ import Upload from "./pages/Upload";
 import ViewPhoto from "./pages/ViewPhoto";
 import EditPhoto from "./pages/EditPhoto";
 import NotFound from "./pages/NotFound";
+import Navbar from "@/components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/gallery" element={<Gallery />} />
