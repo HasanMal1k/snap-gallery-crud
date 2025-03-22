@@ -14,7 +14,7 @@ const Gallery = () => {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode<'grid' | 'list'>>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const navigate = useNavigate();
   const { toast } = useToast();
 
