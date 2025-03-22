@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client'; // Update to use the proper client
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import {
   Card,
   CardContent,
@@ -46,6 +46,7 @@ const Login = () => {
     setLoading(true);
     
     try {
+      console.log('Signing in with:', email);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -77,6 +78,7 @@ const Login = () => {
     setLoading(true);
     
     try {
+      console.log('Signing up with:', email);
       const { error } = await supabase.auth.signUp({
         email,
         password,
