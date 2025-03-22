@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Navbar from '@/components/Navbar';
 import { Upload, X, ImagePlus } from 'lucide-react';
-import { v4 as uuidv4 } from '@supabase/gotrue-js';
+import { v4 as uuidv4 } from 'uuid';
 import { motion } from 'framer-motion';
 
 const UploadPage = () => {
