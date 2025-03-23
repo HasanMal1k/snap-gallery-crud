@@ -47,7 +47,7 @@ const PhotoCard = ({ photo, onDelete, currentUserId }: PhotoCardProps) => {
       
       // Delete the photo from the database first
       const { error } = await supabase
-        .from('photos' as any)
+        .from('photos')
         .delete()
         .eq('id', photo.id);
         
