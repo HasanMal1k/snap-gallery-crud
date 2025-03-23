@@ -131,7 +131,7 @@ const UploadPage = () => {
       
       // Store photo metadata in the database
       const { error: dbError } = await supabase
-        .from('photos')
+        .from('photos' as any)
         .insert([
           {
             id: photoId,
@@ -140,7 +140,7 @@ const UploadPage = () => {
             url: publicUrl,
             user_id: user.id,
           },
-        ]);
+        ] as any);
         
       if (dbError) {
         console.error('Database error:', dbError);

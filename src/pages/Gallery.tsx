@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client'; // Update to use the proper client
+import { supabase } from '@/integrations/supabase/client'; 
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,7 +15,7 @@ const Gallery = () => {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // Fixed useState with generic type
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -44,7 +44,7 @@ const Gallery = () => {
       setIsLoading(true);
       try {
         const { data, error } = await supabase
-          .from('photos')
+          .from('photos' as any)
           .select('*')
           .order('created_at', { ascending: false });
 
