@@ -1,9 +1,9 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { MoreHorizontal, Trash2, Edit2 } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,19 +35,39 @@ const PhotoCard = ({ photo, onDelete, currentUserId }: PhotoCardProps) => {
     e.stopPropagation();
     
     try {
+      console.log('Deleting photo:', photo.id);
+      
+      // Extract file name from the URL
+      const url = new URL(photo.url);
+      const pathParts = url.pathname.split('/');
+      const fileName = pathParts[pathParts.length - 1];
+      const filePath = `${photo.user_id}/${fileName}`;
+      
+      console.log('Deleting file at path:', filePath);
+      
+      // Delete the photo from the database first
       const { error } = await supabase
         .from('photos')
         .delete()
         .eq('id', photo.id);
         
-      if (error) throw error;
+      if (error) {
+        console.error('Database deletion error:', error);
+        throw error;
+      }
       
       // Delete the photo from storage
       const { error: storageError } = await supabase.storage
         .from('photos')
-        .remove([`${photo.user_id}/${photo.id}`]);
+        .remove([filePath]);
         
-      if (storageError) throw storageError;
+      if (storageError) {
+        console.error('Storage deletion error:', storageError);
+        // Continue even if storage deletion fails
+        console.warn('Database record deleted but file removal failed');
+      } else {
+        console.log('File removed successfully');
+      }
       
       onDelete(photo.id);
       toast({

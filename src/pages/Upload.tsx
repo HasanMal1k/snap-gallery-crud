@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
-import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -94,19 +95,31 @@ const UploadPage = () => {
     if (!uploadedFile || !user) return;
     
     setUploading(true);
+    console.log('Starting upload process...');
     
     try {
       // Generate a unique ID for the photo
       const photoId = uuidv4();
       const fileExt = uploadedFile.name.split('.').pop();
-      const filePath = `${user.id}/${photoId}.${fileExt}`;
+      const fileName = `${photoId}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+      
+      console.log('Uploading to path:', filePath);
       
       // Upload file to Supabase Storage
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError, data: fileData } = await supabase.storage
         .from('photos')
-        .upload(filePath, uploadedFile);
+        .upload(filePath, uploadedFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
         
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
+      
+      console.log('File uploaded successfully:', fileData);
       
       // Get the public URL
       const { data: urlData } = supabase.storage
@@ -114,6 +127,7 @@ const UploadPage = () => {
         .getPublicUrl(filePath);
         
       const publicUrl = urlData.publicUrl;
+      console.log('Public URL:', publicUrl);
       
       // Store photo metadata in the database
       const { error: dbError } = await supabase
@@ -128,7 +142,12 @@ const UploadPage = () => {
           },
         ]);
         
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
+      
+      console.log('Photo metadata stored successfully');
       
       toast({
         title: "Photo uploaded successfully",
