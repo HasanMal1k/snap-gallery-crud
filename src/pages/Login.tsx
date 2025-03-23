@@ -221,21 +221,10 @@ const Login = () => {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t"></div>
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
+                
               </div>
               
-              <div className="grid grid-cols-2 gap-4 w-full">
-                <Button variant="outline" type="button" disabled={loading}>
-                  Google
-                </Button>
-                <Button variant="outline" type="button" disabled={loading}>
-                  GitHub
-                </Button>
-              </div>
+              
             </CardFooter>
           </Card>
         </motion.div>
