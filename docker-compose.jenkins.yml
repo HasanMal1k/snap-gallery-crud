@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app-jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pixelvault-jenkins-app
+    ports:
+      - "8989:89"  # Different port than Part I (which used 8080)
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/app/src  # Volume for code (will be replaced by the code from GitHub)
+    depends_on:
+      - db-jenkins
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  db-jenkins:
+    image: postgres:15
+    container_name: pixelvault-jenkins-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: jenkins_password
+      POSTGRES_DB: pixelvault_jenkins
+    ports:
+      - "5433:5432"  # Different port than Part I (which used 5432)
+    volumes:
+      - postgres-jenkins-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-jenkins-data:
