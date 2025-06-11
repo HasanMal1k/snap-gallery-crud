@@ -1,41 +1,34 @@
 pipeline {
     agent any
-    
+
     stages {
-        stage('Checkout') {
+        stage('delete folder if it exists') {
             steps {
-                // Check out code from GitHub repository
-                checkout scm
+               sh '''
+            if [ -d "/var/lib/jenkins/DevOps/" ]; then
+                find "/var/lib/jenkins/DevOps/" -mindepth 1 -delete
+                echo "Contents of /var/lib/jenkins/DevOps/ have been removed."
+            else
+                echo "Directory /var/lib/jenkins/DevOps/ does not exist."
+            fi
+        '''
+
             }
         }
         
-        stage('Build and Deploy') {
+        stage('Fetch code ') {
             steps {
-                // Use Docker Pipeline plugin to interact with Docker
-                script {
-                    // Stop any existing containers from previous builds
-                    sh 'docker-compose -p pixelvault-jenkins -f docker-compose.jenkins.yml down || true'
-                    
-                    // Build and start the containers with a unique project name
-                    sh 'docker-compose -p pixelvault-jenkins -f docker-compose.jenkins.yml up -d --build'
-                    
-                    // Display running containers
-                    sh 'docker ps'
+                sh 'git clone https://github.com/HasanMal1k/snap-gallery-crud.git /var/lib/jenkins/DevOps/php/'
+            }
+        }
+
+        stage('Build and Start Docker Compose') {
+            steps {
+                dir('/var/lib/jenkins/DevOps/php/') {
+                    sh 'docker compose -p thereactapp up -d'
                 }
             }
         }
     }
-    
-    post {
-        always {
-            // Clean up workspace
-            cleanWs()
-        }
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-    }
+
 }
